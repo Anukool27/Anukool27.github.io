@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anukool | Portfolio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0a0f;--surface:#12121a;--surface2:#1a1a2e;--border:#2a2a3e;
+    --text:#e4e4ed;--text2:#9494a8;--accent:#6c63ff;--accent2:#00d4aa;
+    --gradient:linear-gradient(135deg,#6c63ff,#00d4aa);
+  }
+  html{scroll-behavior:smooth;font-size:16px}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+  ::selection{background:var(--accent);color:#fff}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:6px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+  /* Noise overlay */
+  body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity:.4}
+
+  /* Nav */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;
+    display:flex;justify-content:space-between;align-items:center;
+    backdrop-filter:blur(20px);background:rgba(10,10,15,.7);border-bottom:1px solid rgba(42,42,62,.3);
+    transition:all .3s}
+  .nav-logo{font-weight:800;font-size:1.3rem;background:var(--gradient);-webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;letter-spacing:2px}
+  .nav-links{display:flex;gap:2rem;list-style:none}
+  .nav-links a{color:var(--text2);text-decoration:none;font-size:.85rem;font-weight:500;
+    letter-spacing:1px;text-transform:uppercase;transition:.3s;position:relative}
+  .nav-links a:hover{color:var(--text)}
+  .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;
+    background:var(--gradient);transition:.3s}
+  .nav-links a:hover::after{width:100%}
+
+  /* Hero */
+  .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;
+    position:relative;padding:2rem}
+  .hero-bg{position:absolute;inset:0;overflow:hidden}
+  .hero-bg .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.15;animation:float 8s ease-in-out infinite}
+  .orb-1{width:500px;height:500px;background:#6c63ff;top:-10%;right:-5%;animation-delay:0s}
+  .orb-2{width:400px;height:400px;background:#00d4aa;bottom:-10%;left:-5%;animation-delay:2s}
+  .orb-3{width:300px;height:300px;background:#ff6b6b;top:40%;left:30%;animation-delay:4s}
+  @keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+
+  .hero-content{position:relative;z-index:2;text-align:center;max-width:800px}
+  .hero-label{font-size:.8rem;letter-spacing:4px;text-transform:uppercase;color:var(--accent2);
+    margin-bottom:1.5rem;font-weight:600;opacity:0;animation:fadeUp .8s .2s forwards}
+  .hero-name{font-size:clamp(3rem,8vw,6rem);font-weight:900;line-height:1;margin-bottom:1rem;
+    background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    opacity:0;animation:fadeUp .8s .4s forwards}
+  .hero-title{font-size:clamp(1rem,2.5vw,1.4rem);color:var(--text2);font-weight:300;
+    margin-bottom:2rem;opacity:0;animation:fadeUp .8s .6s forwards}
+  .hero-tags{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;
+    opacity:0;animation:fadeUp .8s .8s forwards}
+  .hero-tags span{padding:.4rem 1rem;border:1px solid var(--border);border-radius:50px;
+    font-size:.75rem;color:var(--text2);font-family:'JetBrains Mono',monospace;
+    transition:.3s;cursor:default}
+  .hero-tags span:hover{border-color:var(--accent);color:var(--accent);
+    box-shadow:0 0 20px rgba(108,99,255,.15)}
+  .hero-cta{margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;
+    opacity:0;animation:fadeUp .8s 1s forwards}
+  .btn{padding:.8rem 2rem;border-radius:50px;font-size:.85rem;font-weight:600;
+    text-decoration:none;transition:.3s;cursor:pointer;border:none;letter-spacing:1px}
+  .btn-primary{background:var(--gradient);color:#fff;box-shadow:0 4px 20px rgba(108,99,255,.3)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(108,99,255,.4)}
+  .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+  .scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+    opacity:0;animation:fadeUp .8s 1.2s forwards}
+  .scroll-indicator .line{width:1px;height:40px;background:var(--gradient);margin:0 auto;
+    animation:scrollLine 2s ease-in-out infinite}
+  @keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}
+    51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+  @keyframes fadeUp{to{opacity:1;transform:translateY(0)}from{opacity:0;transform:translateY(20px)}}
+
+  /* Sections */
+  section{padding:6rem 2rem;max-width:1100px;margin:0 auto}
+  .section-header{margin-bottom:3.5rem}
+  .section-label{font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:var(--accent2);
+    font-weight:600;margin-bottom:.5rem;font-family:'JetBrains Mono',monospace}
+  .section-title{font-size:2.2rem;font-weight:800}
+
+  /* About */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+  .about-text{color:var(--text2);line-height:1.8;font-size:.95rem}
+  .about-text p{margin-bottom:1rem}
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:1.5rem;text-align:center;transition:.3s}
+  .stat-card:hover{border-color:var(--accent);transform:translateY(-4px);
+    box-shadow:0 8px 30px rgba(108,99,255,.1)}
+  .stat-num{font-size:2rem;font-weight:800;background:var(--gradient);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .stat-label{font-size:.75rem;color:var(--text2);margin-top:.3rem;text-transform:uppercase;letter-spacing:1px}
+
+  /* Experience */
+  .timeline{position:relative;padding-left:2rem}
+  .timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+    background:linear-gradient(to bottom,var(--accent),var(--accent2),transparent)}
+  .timeline-item{position:relative;margin-bottom:2.5rem;padding-left:2rem}
+  .timeline-item::before{content:'';position:absolute;left:-2rem;top:.5rem;width:12px;height:12px;
+    border-radius:50%;background:var(--accent);border:3px solid var(--bg);
+    box-shadow:0 0 0 2px var(--accent)}
+  .timeline-date{font-size:.75rem;color:var(--accent2);font-family:'JetBrains Mono',monospace;margin-bottom:.3rem}
+  .timeline-role{font-size:1.15rem;font-weight:700;margin-bottom:.2rem}
+  .timeline-company{color:var(--text2);font-size:.9rem;margin-bottom:.8rem}
+  .timeline-desc{color:var(--text2);font-size:.85rem;line-height:1.7}
+  .timeline-desc li{margin-bottom:.4rem;list-style:none;position:relative;padding-left:1.2rem}
+  .timeline-desc li::before{content:'▸';position:absolute;left:0;color:var(--accent)}
+
+  /* Skills */
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+  .skill-category{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:1.8rem;transition:.3s}
+  .skill-category:hover{border-color:var(--accent);transform:translateY(-4px);
+    box-shadow:0 8px 30px rgba(108,99,255,.1)}
+  .skill-cat-title{font-size:.9rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+  .skill-cat-title .icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;
+    justify-content:center;font-size:.8rem}
+  .skill-tags{display:flex;flex-wrap:wrap;gap:.5rem}
+  .skill-tag{padding:.35rem .8rem;background:var(--surface2);border-radius:6px;
+    font-size:.75rem;color:var(--text2);font-family:'JetBrains Mono',monospace;
+    border:1px solid transparent;transition:.3s}
+  .skill-tag:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* Projects */
+  .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
+  .project-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:2rem;transition:.4s;position:relative;overflow:hidden}
+  .project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    background:var(--gradient);transform:scaleX(0);transition:.4s;transform-origin:left}
+  .project-card:hover::before{transform:scaleX(1)}
+  .project-card:hover{border-color:var(--accent);transform:translateY(-6px);
+    box-shadow:0 12px 40px rgba(108,99,255,.12)}
+  .project-type{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;
+    color:var(--accent2);font-weight:600;margin-bottom:.8rem}
+  .project-name{font-size:1.15rem;font-weight:700;margin-bottom:.6rem}
+  .project-desc{color:var(--text2);font-size:.83rem;line-height:1.7;margin-bottom:1.2rem}
+  .project-tech{display:flex;flex-wrap:wrap;gap:.4rem}
+  .project-tech span{padding:.25rem .6rem;background:rgba(108,99,255,.1);border-radius:4px;
+    font-size:.7rem;color:var(--accent);font-family:'JetBrains Mono',monospace}
+
+  /* Education */
+  .edu-grid{display:grid;gap:1.5rem}
+  .edu-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:2rem;display:flex;justify-content:space-between;align-items:center;
+    flex-wrap:wrap;gap:1rem;transition:.3s}
+  .edu-card:hover{border-color:var(--accent);transform:translateX(6px)}
+  .edu-degree{font-size:1.1rem;font-weight:700}
+  .edu-school{color:var(--text2);font-size:.9rem;margin-top:.2rem}
+  .edu-meta{text-align:right}
+  .edu-date{font-size:.8rem;color:var(--accent2);font-family:'JetBrains Mono',monospace}
+  .edu-gpa{font-size:.85rem;color:var(--text2);margin-top:.2rem}
+
+  /* Publications */
+  .pub-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:2rem;transition:.3s}
+  .pub-card:hover{border-color:var(--accent)}
+  .pub-title{font-weight:700;font-size:1rem;margin-bottom:.4rem}
+  .pub-meta{color:var(--text2);font-size:.85rem}
+  .pub-doi{color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.8rem;
+    margin-top:.5rem;word-break:break-all}
+
+  /* Contact */
+  .contact-section{text-align:center;padding:6rem 2rem 4rem}
+  .contact-section .section-header{margin-bottom:2rem}
+  .contact-links{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem}
+  .contact-link{display:flex;align-items:center;gap:.5rem;padding:.7rem 1.5rem;
+    background:var(--surface);border:1px solid var(--border);border-radius:50px;
+    color:var(--text2);text-decoration:none;font-size:.85rem;transition:.3s}
+  .contact-link:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+  .contact-link svg{width:16px;height:16px}
+
+  /* Footer */
+  footer{text-align:center;padding:2rem;border-top:1px solid var(--border);
+    color:var(--text2);font-size:.75rem}
+
+  /* Mobile */
+  @media(max-width:768px){
+    .nav-links{display:none}
+    .about-grid{grid-template-columns:1fr}
+    .projects-grid{grid-template-columns:1fr}
+    .edu-card{flex-direction:column;align-items:flex-start}
+    .edu-meta{text-align:left}
+    section{padding:4rem 1.5rem}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ANUKOOL</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-label">Software Engineer & ML Engineer</div>
+    <h1 class="hero-name">ANUKOOL</h1>
+    <p class="hero-title">Building efficient, performance-driven software with a passion for<br>
+      systems programming, AI, and low-latency solutions.</p>
+    <div class="hero-tags">
+      <span>C / C++</span><span>Python</span><span>Systems Programming</span>
+      <span>Machine Learning</span><span>GenAI</span><span>LangChain</span>
+      <span>Docker</span><span>AWS</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-outline">Get In Touch</a>
+    </div>
+  </div>
+  <div class="scroll-indicator"><div class="line"></div></div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="section-header">
+    <div class="section-label">// 01</div>
+    <h2 class="section-title">About Me</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm a Computer Science graduate student at <strong>Northeastern University</strong> pursuing a Master of Science with a focus on Machine Learning and Applied Machine Intelligence.</p>
+      <p>My core strengths lie at the intersection of <strong>systems programming</strong> and <strong>AI/ML engineering</strong>. I love building things from the ground up — whether it's custom memory allocators in C++, real-time task schedulers, or context-aware GenAI chatbots.</p>
+      <p>Currently working as an AI Engineer at <strong>CareEscapes AI</strong>, where I build healthcare solutions using LLMs, hybrid search pipelines, and production-grade CI/CD workflows.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num">3.6</div><div class="stat-label">GPA at NEU</div></div>
+      <div class="stat-card"><div class="stat-num">18%</div><div class="stat-label">Search Perf. Gain</div></div>
+      <div class="stat-card"><div class="stat-num">3x</div><div class="stat-label">Allocator Speedup</div></div>
+      <div class="stat-card"><div class="stat-num">1</div><div class="stat-label">IEEE Publication</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="section-header">
+    <div class="section-label">// 02</div>
+    <h2 class="section-title">Experience</h2>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-date">Jan 2026 – Present</div>
+      <div class="timeline-role">AI / Software Engineer</div>
+      <div class="timeline-company">CareEscapes AI · Boston, MA (Experiential Learning)</div>
+      <ul class="timeline-desc">
+        <li>Engineered a context-aware GenAI healthcare chatbot using LangChain, Groq LLaMA3, and Redis for low-latency query resolution.</li>
+        <li>Built FAISS + BM25 hybrid search pipeline across medical documents, improving retrieval accuracy by 18%.</li>
+        <li>Implemented CI/CD pipelines with >80% test coverage and integrated monitoring dashboards.</li>
+        <li>Led Agile sprints with cross-functional teams, delivering stakeholder-driven features on schedule.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="section-header">
+    <div class="section-label">// 03</div>
+    <h2 class="section-title">Technical Skills</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-category">
+      <div class="skill-cat-title"><span class="icon" style="background:rgba(108,99,255,.15);color:var(--accent)">⟨⟩</span> Languages</div>
+      <div class="skill-tags">
+        <span class="skill-tag">C</span><span class="skill-tag">C++</span>
+        <span class="skill-tag">Python</span><span class="skill-tag">Java</span>
+        <span class="skill-tag">R</span><span class="skill-tag">SQL</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title"><span class="icon" style="background:rgba(0,212,170,.15);color:var(--accent2)">⚙</span> Systems & Low-Level</div>
+      <div class="skill-tags">
+        <span class="skill-tag">OS Concepts</span><span class="skill-tag">Memory Management</span>
+        <span class="skill-tag">DSA</span><span class="skill-tag">Multithreading</span>
+        <span class="skill-tag">Socket Programming</span><span class="skill-tag">TCP/IP</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title"><span class="icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">🧠</span> ML & AI</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Scikit-learn</span><span class="skill-tag">TensorFlow</span>
+        <span class="skill-tag">PyTorch</span><span class="skill-tag">XGBoost</span>
+        <span class="skill-tag">LightGBM</span><span class="skill-tag">LangChain</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title"><span class="icon" style="background:rgba(108,99,255,.15);color:var(--accent)">☁</span> Infrastructure & MLOps</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Docker</span><span class="skill-tag">Kubernetes</span>
+        <span class="skill-tag">AWS</span><span class="skill-tag">MLflow</span>
+        <span class="skill-tag">FastAPI</span><span class="skill-tag">CI/CD</span>
+        <span class="skill-tag">Git</span><span class="skill-tag">GDB</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title"><span class="icon" style="background:rgba(0,212,170,.15);color:var(--accent2)">🗄</span> Databases</div>
+      <div class="skill-tags">
+        <span class="skill-tag">PostgreSQL</span><span class="skill-tag">MongoDB</span>
+        <span class="skill-tag">Redis</span><span class="skill-tag">FAISS</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title"><span class="icon" style="background:rgba(255,107,107,.15);color:#ff6b6b">📊</span> Tools & Platforms</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Linux CLI</span><span class="skill-tag">Make/CMake</span>
+        <span class="skill-tag">Jupyter</span><span class="skill-tag">VS Code</span>
+        <span class="skill-tag">Tableau</span><span class="skill-tag">GitHub</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="section-header">
+    <div class="section-label">// 04</div>
+    <h2 class="section-title">Projects</h2>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-type">Ongoing · 2026</div>
+      <div class="project-name">InsightQA – GenAI E2E Test Runner</div>
+      <div class="project-desc">AI-powered end-to-end test automation framework using LLMs, deployed as modular FastAPI microservices. Features parallel async test execution, self-healing test logic, and automated bug reporting via GitHub/JIRA.</div>
+      <div class="project-tech"><span>OpenAI API</span><span>LangChain</span><span>FastAPI</span><span>Docker</span><span>Postgres</span><span>pytest-xdist</span></div>
+    </div>
+    <div class="project-card">
+      <div class="project-type">Systems · 2025</div>
+      <div class="project-name">Custom Memory Allocators</div>
+      <div class="project-desc">Implemented four allocators (Linear, Stack, Pool, Free List) in C++ achieving O(1) allocation. Embedded free-list metadata within unused blocks with block coalescing, benchmarked at 3x faster than malloc.</div>
+      <div class="project-tech"><span>C++</span><span>CMake</span><span>Memory Mgmt</span></div>
+    </div>
+    <div class="project-card">
+      <div class="project-type">Systems · 2025</div>
+      <div class="project-name">Real-Time Task Scheduler</div>
+      <div class="project-desc">FreeRTOS-based scheduler with Rate Monotonic and FCFS algorithms. Supports periodic tasks (250ms-1000ms), high-priority sporadic tasks, and dynamic suspension/resumption with deadline miss detection.</div>
+      <div class="project-tech"><span>C</span><span>FreeRTOS</span><span>Linux</span></div>
+    </div>
+    <div class="project-card">
+      <div class="project-type">ML/Data · 2025-2026</div>
+      <div class="project-name">DataCo Smart Supply Chain</div>
+      <div class="project-desc">Predictive models for demand forecasting (R²=0.97) and fraud detection (F1=0.86). Automated ML lifecycle with MLflow and H2O AutoML with explainability (LIME, FairML). Tableau dashboards for KPIs.</div>
+      <div class="project-tech"><span>Python</span><span>MLflow</span><span>H2O</span><span>LightGBM</span><span>Tableau</span></div>
+    </div>
+    <div class="project-card">
+      <div class="project-type">ML/NLP · 2025</div>
+      <div class="project-name">Clinical Trial Analytics</div>
+      <div class="project-desc">Pipeline to fetch, filter, and enrich clinical trials from ClinicalTrials.gov API. Used GPT API to classify therapeutic modalities and biological targets. Visualizations for enrollment trends and trial duration analysis.</div>
+      <div class="project-tech"><span>Python</span><span>OpenAI GPT</span><span>Pandas</span><span>Matplotlib</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Education -->
+<section id="education">
+  <div class="section-header">
+    <div class="section-label">// 05</div>
+    <h2 class="section-title">Education</h2>
+  </div>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div>
+        <div class="edu-degree">M.S. in Applied Machine Intelligence</div>
+        <div class="edu-school">Northeastern University · Boston, MA</div>
+      </div>
+      <div class="edu-meta">
+        <div class="edu-date">Jan 2025 – Apr 2027</div>
+        <div class="edu-gpa">GPA: 3.6 / 4.0</div>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div>
+        <div class="edu-degree">B.Tech in Computer Science</div>
+        <div class="edu-school">Galgotias University · Noida, India</div>
+      </div>
+      <div class="edu-meta">
+        <div class="edu-date">Sept 2020 – Mar 2024</div>
+        <div class="edu-gpa">CGPA: 8.2 / 10</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Publications -->
+<section id="publications">
+  <div class="section-header">
+    <div class="section-label">// 06</div>
+    <h2 class="section-title">Publications</h2>
+  </div>
+  <div class="pub-card">
+    <div class="pub-title">Spam Detection Using Machine Learning</div>
+    <div class="pub-meta">Anukool, A., et al. · IEEE, 2024, pp. 144–148</div>
+    <div class="pub-doi">DOI: 10.1109/ICAC2N63387.2024.10895048</div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact-section" id="contact">
+  <div class="section-header">
+    <div class="section-label">// 07</div>
+    <h2 class="section-title">Get In Touch</h2>
+  </div>
+  <p style="color:var(--text2);max-width:500px;margin:0 auto;font-size:.95rem">
+    I'm always open to discussing new opportunities, interesting projects, or just connecting.
+  </p>
+  <div class="contact-links">
+    <a href="mailto:Anukool23@icloud.com" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      Anukool23@icloud.com
+    </a>
+    <a href="tel:+18573514459" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      +1 (857) 351-4459
+    </a>
+    <a href="#" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn
+    </a>
+    <a href="#" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      GitHub
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>Designed & Built by Anukool · 2026</p>
+</footer>
+
+<script>
+// Intersection Observer for scroll animations
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}
+  });
+},{threshold:0.1});
+document.querySelectorAll('section:not(.hero)').forEach(s=>{
+  s.style.opacity='0';s.style.transform='translateY(30px)';
+  s.style.transition='opacity 0.6s ease, transform 0.6s ease';
+  obs.observe(s);
+});
+
+// Active nav link on scroll
+const sections=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+  let c='';
+  sections.forEach(s=>{if(scrollY>=s.offsetTop-200)c=s.id});
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.style.color=a.getAttribute('href')==='#'+c?'var(--text)':'var(--text2)';
+  });
+});
+</script>
+</body>
+</html>
